@@ -32,7 +32,7 @@ m_proj_marginal_x <- function(bs, method) {
   else {
     for (t in seq_len(t_end)) {
       # Unpack list of marginal (mixed Gaussian) x: w, mu_list, Sigma_list
-      list2env(flatten_mix(bs[[t]]), environment())
+      list2env(marginal_x(bs[[t]]), environment())
       
       pp <- m_proj(w, mu_list, Sigma_list)
       mu[, t] <- pp$mu
