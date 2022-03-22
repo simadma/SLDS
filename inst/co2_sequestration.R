@@ -108,3 +108,30 @@ for (i in 2:length(methods)) {
 }
 legend('bottomleft', legend = methods, col = my_colors, lty = 1)
 ##########################################################################################
+
+## PARTICLE FILTERING
+
+
+res <- particle_filtering(params, sim$Y, 100)
+
+s <- map(res, "ss")
+s_mean <- map_dbl(s, mean)
+s_sd <- map_dbl(s, sd)
+plot(s_mean, type = 'l')
+lines(s_mean - 1.96*s_sd, lty=2)
+lines(s_mean + 1.96*s_sd, lty=2)
+
+x1 <- map(res, "xs") %>% 
+  map(map_dbl, 1)
+x2 <- map(res, "xs") %>% 
+  map(map_dbl, 2)
+
+cycle_plot <- function(t, x1, x2) {
+  d1 <- density(x1)
+  d2 <- density(x2)
+  plot(d1$x, d1$y, type = 'l', xlim = c(0, 150), ylim = c(0, 0.2), main = paste("t =", t))
+  lines(d2$x, d2$y, col = 2)
+  readline(prompt = "Press [Enter] to continue")
+}
+
+pwalk(list(t = seq_along(res), x1 = x1, x2 = x2), cycle_plot)
