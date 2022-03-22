@@ -84,16 +84,12 @@ bs <- list()
 s_bs <- list()
 x_bs <- list()
 l_bs <- list()
-if (t_end <= 13) {
-  methods <- c('GPB1', 'IMM', 'GPB2', 'Exact')
-} else {
-  methods <- c('GPB1', 'IMM', 'GPB2')
-}
+methods <- c('GPB1', 'IMM', 'GPB2')
 
 for (method in methods) {
   bs[[method]] <- filtering(params, y, method)
   s_bs[[method]] <- vapply(bs[[method]], function(x) x$p_t, numeric(M))
-  x_bs[[method]] <- marginal_x(bs[[method]], method)
+  x_bs[[method]] <- m_proj_marginal_x(bs[[method]], method)
   l_bs[[method]] <- vapply(bs[[method]], function(x) x$l_t, numeric(1))
 }
 
