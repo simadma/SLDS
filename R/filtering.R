@@ -95,8 +95,8 @@ pred_step <- function(params, state, t, method) {
 cond_step <- function(params, state, y, t, method) {
   list2env(params, environment())  # Unpack list: C, d, R
   list2env(state, environment())   # Unpack list: p_dt, (W_dt), mu_dt, Sigma_dt
-  M <- nrow(P)             # Number of categories of S
-  N <- nrow(A)             # Vector length of X
+  M <- dim(C)[3]        # Number of categories of S
+  N <- dim(C)[2]        # Vector length of X
   if (method == 'exact') {
     J <- M^t
   }
