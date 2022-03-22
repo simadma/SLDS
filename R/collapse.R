@@ -11,13 +11,16 @@ m_proj <- function(w, mu_list, Sigma_list) {
   N <- nrow(Sigma_list)
   mu <- mu_list %*% w
   Sigma <- matrix(0, N, N)
-  for (i in 1:length(w)) {
+  for (i in seq_along(w)) {
     Sigma <- Sigma + w[i]*(Sigma_list[,, i] + tcrossprod(mu_list[, i] - mu))
   }
   list(mu = mu, Sigma = Sigma)
 }
 
-marginal_x <- function(bs, method) {
+# "bs" is a list of belief states
+# "method" is either exact, gpb1, imm or gpb2
+
+m_proj_marginal_x <- function(bs, method) {
   t_end <- length(bs)
   N <- nrow(bs[[1]]$mu_t)
   mu <- matrix(0, N, t_end)
@@ -27,8 +30,8 @@ marginal_x <- function(bs, method) {
     Sigma[,, ] <- vapply(bs, function(x) x$Sigma_t, numeric(N^2))
   }
   else {
-    for (t in 1:t_end) {
-      # Unpack list of flatten mix: w, mu_list, Sigma_list
+    for (t in seq_len(t_end)) {
+      # Unpack list of marginal (mixed Gaussian) x: w, mu_list, Sigma_list
       list2env(flatten_mix(bs[[t]]), environment())
       
       pp <- m_proj(w, mu_list, Sigma_list)
@@ -39,7 +42,11 @@ marginal_x <- function(bs, method) {
   mget(c('mu', 'Sigma'))
 }
 
-flatten_mix <- function(bs) {
+# Computes the marginal X^(t) | y^(1:t) density parameters
+#   {<w_i, mu_i, Sigma_j> j = 1,2...}
+# which gives the pdf
+#   sum_j w_j f(x^(t) | mu_j, Sigma_j)
+marginal_x <- function(bs) {
   w <- c(t(bs$W_t * bs$p_t))
   
   mu_list <- aperm(bs$mu_t, c(1, 3, 2))
