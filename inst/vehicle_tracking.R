@@ -1,7 +1,4 @@
-source('R/simulate_slds.R')
-source('R/filtering.R')
-source('R/collapse.R')
-source('R/score.R')
+source('R/utils.R')
 library(ggplot2)
 
 M <- 4  # 1=stationary, 2=speeding up, 3=constant velocity, 4=slowing down

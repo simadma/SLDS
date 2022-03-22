@@ -1,5 +1,3 @@
-rmvnorm <- mvtnorm::rmvnorm
-
 # Simulation of an SLDS:
 # The parameters are
 # P, a transition probability matrix for the hidden S variable,
@@ -26,16 +24,16 @@ simulate_slds <- function(params, n) {
   
   # First step
   S[1] <- sample(M, 1, prob = q)
-  X[, 1] <- rmvnorm(1, nu[, S[1]], as.matrix(Gamma[,, S[1]]))
-  Y[, 1] <- rmvnorm(1, C[,, S[1]] %*% X[, 1] + d[, S[1]], as.matrix(R[,, S[1]]))
+  X[, 1] <- mvtnorm::rmvnorm(1, nu[, S[1]], as.matrix(Gamma[,, S[1]]))
+  Y[, 1] <- mvtnorm::rmvnorm(1, C[,, S[1]] %*% X[, 1] + d[, S[1]], as.matrix(R[,, S[1]]))
   # Iterate
   for (t in 1:(n - 1)) {
     S[t + 1] <- sample(M, 1, prob = P[S[t], ])
-    X[, t + 1] <- rmvnorm(1,
+    X[, t + 1] <- mvtnorm::rmvnorm(1,
       A[,, S[t + 1]] %*% X[, t] + b[, S[t + 1]],
       as.matrix(Q[,, S[t + 1]])
     )
-    Y[, t + 1] <- rmvnorm(1,
+    Y[, t + 1] <- mvtnorm::rmvnorm(1,
       C[,, S[t + 1]] %*% X[, t + 1] + d[, S[t + 1]],
       as.matrix(R[,, S[t + 1]])
     )

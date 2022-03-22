@@ -1,8 +1,6 @@
-source('R/simulate_slds.R')
-source('R/filtering.R')
-source('R/collapse.R')
-source('R/score.R')
+source('R/utils.R')
 library(ggplot2)
+library(purrr)
 
 M <- 2
 N <- 2
@@ -59,7 +57,6 @@ legend('bottomright', legend = names(s_col),
 # saveRDS(sim, file = "./data/co2_sim.rds")
 ## COMPUTE FILTERED ESTIMATES
 y <- sim$Y  # Evidence
-
 bs <- list()
 s_bs <- list()
 x_bs <- list()
@@ -73,7 +70,7 @@ if (t_end <= 13) {
 for (method in methods) {
   bs[[method]] <- filtering(params, y, method)
   s_bs[[method]] <- vapply(bs[[method]], function(x) x$p_t, numeric(2))
-  x_bs[[method]] <- marginal_x(bs[[method]], method)
+  x_bs[[method]] <- m_proj_marginal_x(bs[[method]], method)
   l_bs[[method]] <- vapply(bs[[method]], function(x) x$l_t, numeric(1))
 }
 

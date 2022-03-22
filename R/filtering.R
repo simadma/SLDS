@@ -1,5 +1,3 @@
-source('R/collapse.R')
-
 # Filtering algorithm:
 # Given parameters of the SLDS `params`, and observation sequence `obs`,
 # the filtered estimate is computed. The function returns the filtered probability of the
